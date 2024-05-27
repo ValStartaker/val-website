@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Deledda";
+  src: url("Deledda Open Regular.ttf")
+}
+
+@font-face {
+  font-family: "FKRoman";
+  src: url("FKRomanStandard.otf")
+}
+
