@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ValStartaker</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="flex flex-col h-screen w-screen items-center bg-lime-50 dark:bg-slate-900 dark:text-white">
+    <main class="flex flex-col lg:w-1/2 w-11/12 lg:text-left text-center space-y-4">
+      <div class="flex flex-col mt-6 lg:mt-10 lg:items-baseline justify-center lg:justify-start">
+        <h1 class="text-5xl lg:text-5 xl font-heading italic text-rose-500">Val's Parliament Diagram Creator</h1>
+        <div class="block bg-rose-500 w-full h-2 ml-2 mt-6"></div>
+      </div>
+      <div class="text-lg lg:text-2xl font-body space-y-4">
+        <p class="text-justify">This is a tool to generate arch-shaped parliament diagrams, based on <a class="dark:text-rose-500 text-rose-600 dark:hover:text-rose-400 hover:text-rose-700 transition-colors ease-in-out" href="https://github.com/slashme/parliamentdiagram/tree/master">this implementation</a>.</p>
+        <form method="post" enctype="multipart/form-data">
+          <label for="file">File</label>
+          <input id="file" name="file" type="file" />
+          <button>Upload</button>
+        </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
