@@ -7,21 +7,295 @@
     <title>ValStartaker</title>
     <link rel="stylesheet" href="./src/style.css" />
   </head>
-  <body class="flex flex-col h-screen w-screen items-center bg-lime-50 dark:bg-slate-900 dark:text-white">
-    <main class="flex flex-col lg:w-1/2 w-11/12 lg:text-left text-center space-y-4">
-      <div class="flex flex-col mt-6 lg:mt-10 lg:items-baseline justify-center lg:justify-start">
-        <h1 class="text-5xl lg:text-5 xl font-heading italic text-rose-500">Val's Parliament Diagram Creator</h1>
-        <div class="block bg-rose-500 w-full h-2 ml-2 mt-6"></div>
+  <body class="flex flex-col h-screen items-center bg-lime-50 dark:bg-slate-900">
+    <main class="flex flex-col lg:w-1/2 w-11/12 lg:text-left text-center space-y-4 my-6">
+      <div class="flex mt-6 lg:mt-10 lg:items-baseline justify-center lg:justify-start">
+        <h1 class="text-5xl lg:text-6xl font-heading  text-rose-500">AletheiaAsriel</h1>
+        <span class="hidden lg:block bg-rose-500 w-full h-2 ml-1"></span>
       </div>
       <div class="text-lg lg:text-2xl font-body space-y-4">
-        <p class="text-justify">This is a tool to generate arch-shaped parliament diagrams, based on <a class="dark:text-rose-500 text-rose-600 dark:hover:text-rose-400 hover:text-rose-700 transition-colors ease-in-out" href="https://github.com/slashme/parliamentdiagram/tree/master">this implementation</a>.</p>
-        <form class="flex flex-col" method="post" enctype="multipart/form-data">
-          <label for="file">File</label>
-          <input id="file" name="file" type="file" />
-          <button>Upload</button>
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl lg:text-3xl text-rose-500">Parliament Diagram Creator</h1>
+          <a href="index.html" class="bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+            <span>Back</span>
+          </a>
+        </div>
+        <p class="text-justify dark:text-white">This is a tool to generate arch-shaped parliament diagrams, as often used on Wikipedia. The image generation is forked from <a class="dark:text-rose-500 text-rose-600 dark:hover:text-rose-400 hover:text-rose-700 transition-colors ease-in-out" href="https://github.com/Gouvernathor/parliamentarch">this implementation</a>. All other work my own.</p>
+        <hr>
+        <form id="parliamentForm" class="flex flex-col space-y-6">
+          <div class="flex justify-end space-x-4">
+            <a href="parliament_doc.html" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors cursor-pointer">
+              Documentation
+            </a>
+            <label for="jsonImport" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors cursor-pointer">
+              Import JSON
+              <input type="file" id="jsonImport" accept=".json" class="hidden">
+            </label>
+            <button type="button" id="exportJson" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors cursor-pointer">
+              Export JSON
+            </button>
+           
+          </div>
+          
+          <div id="parties" class="space-y-4">
+            <h2 class="text-2xl font-semibold dark:text-white">Party Information</h2>
+            <div class="flex space-x-4">
+              <button type="button" id="addParty" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors">
+                Add Party
+              </button>
+              <button type="button" id="removeParty" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors">
+                Remove Party
+              </button>
+              <button type="button" id="clearParties" class="bg-rose-500 dark:text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors">
+                Clear All
+              </button>
+            </div>
+            <div class="party-entries space-y-4">
+              <div class="party-entry flex flex-col space-y-2 p-4 border border-rose-300 rounded-lg">
+                <div class="flex space-x-4">
+                  <input type="text" placeholder="Party Name" class="party-name flex-1 p-2 rounded dark:bg-slate-800 border border-rose-300 text-white" required>
+                  <input type="number" placeholder="Seats" min="1" class="party-seats w-24 p-2 rounded dark:bg-slate-800 border border-rose-300 text-white" required>
+                  <input type="color" class="party-color w-12 h-10 rounded cursor-pointer" required>
+                </div>
+                <div class="flex space-x-4 items-center">
+                  <div class="flex items-center space-x-2">
+                    <label class="dark:text-white whitespace-nowrap">Border Width:</label>
+                    <input type="number" placeholder="0" min="0" step="0.1" value="0" class="border-width w-20 p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <label class="dark:text-white whitespace-nowrap">Border Color:</label>
+                    <input type="color" value="#000000" class="border-color w-12 h-10 rounded cursor-pointer">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h2 class="text-2xl font-semibold dark:text-white">Diagram Settings</h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col">
+                <label class="dark:text-white">Minimum Rows</label>
+                <input type="number" id="minRows" value="0" min="0" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex flex-col">
+                <label class="dark:text-white">Seat Radius Factor</label>
+                <input type="number" id="seatRadius" value="1" step="0.1" min="0.1" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex flex-col">
+                <label class="dark:text-white">Span Angle (degrees)</label>
+                <input type="number" id="spanAngle" value="180" min="0" max="360" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex flex-col">
+                <label class="dark:text-white">Canvas Size</label>
+                <input type="number" id="canvasSize" value="175" min="50" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex flex-col">
+                <label class="dark:text-white">Margins</label>
+                <input type="number" id="margins" value="5.0" step="0.5" min="0" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex flex-col">
+                <label class="dark:text-white">Font Size Factor</label>
+                <input type="number" id="fontSizeFactor" value="0.2" step="0.01" min="0" class="p-2 rounded dark:bg-slate-800 border border-rose-300 text-white">
+              </div>
+              <div class="flex items-center col-span-2">
+                <input type="checkbox" id="writeSeats" checked class="mr-2">
+                <label for="writeSeats" class="dark:text-white">Show number of seats</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="bg-rose-500 text-white px-6 py-3 rounded-lg hover:bg-rose-600 transition-colors text-2xl">
+            Generate Diagram
+          </button>
         </form>
+
+        <div id="result" class=" flex-col items-center space-y-4 hidden">
+          <div id="svgContainer" class="w-full bg-white p-4 rounded-lg"></div>
+          <button id="downloadSvg" class="bg-rose-500 text-white px-6 py-3 mb-6 rounded-lg hover:bg-rose-600 transition-colors">
+            Download SVG
+          </button>
         </div>
       </div>
     </main>
+
+    <script>
+      document.getElementById('addParty').addEventListener('click', () => {
+        const partyEntries = document.querySelector('.party-entries');
+        const template = document.querySelector('.party-entry').cloneNode(true);
+        template.querySelector('.party-name').value = '';
+        template.querySelector('.party-seats').value = '';
+        template.querySelector('.party-color').value = '#000000';
+        template.querySelector('.border-width').value = '0';
+        template.querySelector('.border-color').value = '#000000';
+        partyEntries.appendChild(template);
+      });
+
+      document.getElementById('parliamentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const parties = Array.from(document.querySelectorAll('.party-entry')).map(party => ({
+          data: party.querySelector('.party-name').value,
+          color: party.querySelector('.party-color').value,
+          border_size: parseFloat(party.querySelector('.border-width').value) || 0,
+          border_color: party.querySelector('.border-color').value,
+          nseats: parseInt(party.querySelector('.party-seats').value)
+        }));
+
+        // Check total seats
+        const totalSeats = parties.reduce((sum, party) => sum + party.nseats, 0);
+        if (totalSeats > 5000) {
+          alert(`Total number of seats (${totalSeats}) exceeds the maximum limit of 5000 seats.`);
+          return;
+        }
+
+        const data = {
+          attrib: parties,
+          min_nrows: parseInt(document.getElementById('minRows').value),
+          seat_radius_factor: parseFloat(document.getElementById('seatRadius').value),
+          span_angle: parseInt(document.getElementById('spanAngle').value),
+          canvas_size: parseInt(document.getElementById('canvasSize').value),
+          margins: parseFloat(document.getElementById('margins').value),
+          write_number_of_seats: document.getElementById('writeSeats').checked,
+          font_size_factor: parseFloat(document.getElementById('fontSizeFactor').value)
+        };
+
+        try {
+          const response = await fetch('/generate-parliament', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (!response.ok) throw new Error('Failed to generate diagram');
+
+          const svg = await response.text();
+          document.getElementById('svgContainer').innerHTML = svg;
+          document.getElementById('result').classList.remove('hidden');
+
+          document.getElementById('downloadSvg').onclick = () => {
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'parliament-diagram.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          };
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Failed to generate diagram. Please try again.');
+        }
+      });
+
+      document.getElementById('jsonImport').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          
+          const partyEntries = document.querySelector('.party-entries');
+          const existingParties = partyEntries.querySelectorAll('.party-entry');
+          for (let i = 1; i < existingParties.length; i++) {
+            existingParties[i].remove();
+          }
+          
+          data.attrib.forEach((party, index) => {
+            if (index === 0) {
+              const firstParty = existingParties[0];
+              firstParty.querySelector('.party-name').value = party.data;
+              firstParty.querySelector('.party-seats').value = party.nseats;
+              firstParty.querySelector('.party-color').value = party.color;
+              firstParty.querySelector('.border-width').value = party.border_size || 0;
+              firstParty.querySelector('.border-color').value = party.border_color || '#000000';
+            } else {
+              const template = document.querySelector('.party-entry').cloneNode(true);
+              template.querySelector('.party-name').value = party.data;
+              template.querySelector('.party-seats').value = party.nseats;
+              template.querySelector('.party-color').value = party.color;
+              template.querySelector('.border-width').value = party.border_size || 0;
+              template.querySelector('.border-color').value = party.border_color || '#000000';
+              partyEntries.appendChild(template);
+            }
+          });
+          
+          document.getElementById('minRows').value = data.min_nrows || 0;
+          document.getElementById('seatRadius').value = data.seat_radius_factor || 1;
+          document.getElementById('spanAngle').value = data.span_angle || 180;
+          document.getElementById('canvasSize').value = data.canvas_size || 175;
+          document.getElementById('margins').value = data.margins || 5.0;
+          document.getElementById('fontSizeFactor').value = data.font_size_factor || 0.2;
+          document.getElementById('writeSeats').checked = data.write_number_of_seats !== false;
+          
+        } catch (error) {
+          console.error('Error importing JSON:', error);
+          alert('Failed to import JSON. Please make sure the file is in the correct format.');
+        }
+        
+        e.target.value = '';
+      });
+
+      document.getElementById('exportJson').addEventListener('click', () => {
+        const parties = Array.from(document.querySelectorAll('.party-entry')).map(party => ({
+          data: party.querySelector('.party-name').value,
+          color: party.querySelector('.party-color').value,
+          border_size: parseFloat(party.querySelector('.border-width').value) || 0,
+          border_color: party.querySelector('.border-color').value,
+          nseats: parseInt(party.querySelector('.party-seats').value)
+        }));
+
+        const data = {
+          attrib: parties,
+          min_nrows: parseInt(document.getElementById('minRows').value),
+          seat_radius_factor: parseFloat(document.getElementById('seatRadius').value),
+          span_angle: parseInt(document.getElementById('spanAngle').value),
+          canvas_size: parseInt(document.getElementById('canvasSize').value),
+          margins: parseFloat(document.getElementById('margins').value),
+          write_number_of_seats: document.getElementById('writeSeats').checked,
+          font_size_factor: parseFloat(document.getElementById('fontSizeFactor').value)
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'parliament-config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById('removeParty').addEventListener('click', () => {
+        const parties = document.querySelectorAll('.party-entry');
+        if (parties.length > 1) {
+          parties[parties.length - 1].remove();
+        }
+      });
+
+      document.getElementById('clearParties').addEventListener('click', () => {
+        const parties = document.querySelectorAll('.party-entry');
+        // Remove all but first party
+        for (let i = parties.length - 1; i > 0; i--) {
+          parties[i].remove();
+        }
+        // Reset first party to default values
+        const firstParty = parties[0];
+        firstParty.querySelector('.party-name').value = '';
+        firstParty.querySelector('.party-seats').value = '';
+        firstParty.querySelector('.party-color').value = '#000000';
+        firstParty.querySelector('.border-width').value = '0';
+        firstParty.querySelector('.border-color').value = '#000000';
+      });
+    </script>
   </body>
 </html>

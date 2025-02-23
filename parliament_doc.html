@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ValStartaker</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="flex flex-col h-screen items-center bg-lime-50 dark:bg-slate-900 dark:text-white">
+    <main class="flex flex-col lg:w-1/2 w-11/12 lg:text-left text-center space-y-4 my-6">
+      <div class="flex mt-6 lg:mt-10 lg:items-baseline justify-center lg:justify-start">
+        <h1 class="text-5xl lg:text-6xl font-heading  text-rose-500">AletheiaAsriel</h1>
+        <span class="hidden lg:block bg-rose-500 w-full h-2 ml-1"></span>
+      </div>
+      <div class="text-lg lg:text-2xl font-body space-y-4">
+        
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl lg:text-3xl text-rose-500">Documentation for the parliament diagram creator</h1>
+          <a href="parliament.html" class="bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600 transition-colors flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+            <span>Back</span>
+          </a>
+        </div>
+
+        <p class="text-justify">Existing documentation for <a class="dark:text-rose-500 text-rose-600 dark:hover:text-rose-400 hover:text-rose-700 transition-colors ease-in-out" href="https://github.com/Gouvernathor/parliamentarch">Gouvernathor's parliament diagram creator</a> covers the function of the Python code which generates the SVG image from the JSON input. Unfortunately, any description of the JSON format used by the Python code is lacking, and so this page provides information on the expected JSON input format.</p>
+        <p class="text-justify">The JSON input is as follows:</p>
+        <div class="relative">
+          <div class="absolute right-4 top-4">
+            <button onclick="copyCode()" class="bg-rose-500 text-white px-3 py-1 rounded hover:bg-rose-600 transition-colors text-base flex items-center space-x-2">
+              <span id="copyText">Copy</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+              </svg>
+            </button>
+          </div>
+          <pre id="codeBlock" class="bg-slate-800 text-white p-6 rounded-lg overflow-x-auto font-mono text-sm lg:text-base whitespace-pre">
+    {
+    "attrib": [
+        {
+            "data": "Party 1",
+            "color": "#992A2A",
+            "border_size": 0,
+            "border_color": "#000000",
+            "nseats": 77
+        },
+        {
+            "data": "Party 2",
+            "color": "#CEAC00",
+            "border_size": 0,
+            "border_color": "#000000",
+            "nseats": 91
+        }
+        ...
+    ],
+    "min_nrows": 0,
+    "seat_radius_factor": 1,
+    "span_angle": 180,
+    "canvas_size": 175,
+    "margins": 5.0,
+    "write_number_of_seats": true,
+    "font_size_factor": 0.2
+    }
+</pre>
+        </div>
+
+        
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold text-rose-500">Party Information (attrib)</h3>
+            <p class="mb-2">An array of objects, where each object represents a party with the following fields:</p>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><span class="font-semibold">data</span> (string): The name of the party</li>
+              <li><span class="font-semibold">color</span> (string): The fill color of the party's seats in hex format (e.g., "#992A2A")</li>
+              <li><span class="font-semibold">border_size</span> (number): Width of the border around each seat. Must be ≥ 0</li>
+              <li><span class="font-semibold">border_color</span> (string): The color of the seat border in hex format (e.g., "#000000")</li>
+              <li><span class="font-semibold">nseats</span> (integer): Number of seats for this party. Must be > 0</li>
+            </ul>
+            <p class="mt-2 text-rose-500"><span class="font-semibold">Note:</span> The total number of seats across all parties must not exceed 5000.</p>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-rose-500">Diagram Settings</h3>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><span class="font-semibold">min_nrows</span> (integer): Minimum number of rows in the diagram. Must be ≥ 0. The actual number of rows may be higher depending on the number of seats</li>
+              <li><span class="font-semibold">seat_radius_factor</span> (number): Controls the size of individual seats. Must be > 0. Default is 1.0, larger values make seats bigger</li>
+              <li><span class="font-semibold">span_angle</span> (integer): The angle in degrees that the diagram spans. Must be between 0 and 360. Default is 180 for a semicircle</li>
+              <li><span class="font-semibold">canvas_size</span> (integer): The size of the output SVG in arbitrary units. Must be ≥ 50</li>
+              <li><span class="font-semibold">margins</span> (number): The size of the margins around the diagram in the same units as canvas_size. Must be ≥ 0</li>
+              <li><span class="font-semibold">write_number_of_seats</span> (boolean): Whether to display the number of seats for each party</li>
+              <li><span class="font-semibold">font_size_factor</span> (number): Controls the size of the text showing seat numbers. Must be > 0. Default is 0.2, larger values make text bigger</li>
+            </ul>
+          </div>
+        </div>
+
+        <script>
+          function copyCode() {
+            const codeBlock = document.getElementById('codeBlock');
+            const copyText = document.getElementById('copyText');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+              copyText.textContent = 'Copied!';
+              setTimeout(() => {
+                copyText.textContent = 'Copy';
+              }, 2000);
+            }).catch(err => {
+              console.error('Failed to copy:', err);
+            });
+          }
+        </script>
+      </div>
+    </main>
+  </body>
+</html>
